@@ -1,14 +1,21 @@
 package menu.controller;
 
+import menu.domain.CoachNames;
 import menu.view.InputView;
 import menu.view.OutputView;
 
 public class MenuRecomendationController {
+    InputView inputView;
+    OutputView outputView;
+
     public MenuRecomendationController(InputView inputView, OutputView outputView) {
+        this.inputView = inputView;
+        this.outputView = outputView;
     }
 
     public void run() {
         // 이름 입력받기 => List<String> 이름
+        promptCoachNames();
         // 반복 : 입력받은 이름마다 프롬프트 생성
         // 이름을 인자로 받아 못먹는 메뉴를 받는 프롬프트
         // 이름 : List<메뉴> 으로 hash map 추가
@@ -23,5 +30,16 @@ public class MenuRecomendationController {
         // 추천할 수 없는 메뉴의 경우 재추첨한다.
 
         // 출력
+    }
+
+    public CoachNames promptCoachNames() {
+        while (true) {
+            try {
+                String input = inputView.readCoach();
+                return new CoachNames(input);
+            } catch (IllegalArgumentException e) {
+                outputView.printError(e);
+            }
+        }
     }
 }
