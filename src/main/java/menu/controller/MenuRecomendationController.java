@@ -75,7 +75,7 @@ public class MenuRecomendationController {
 
     public void recommendCategory() {
         while (true) {
-            Category newCategory = Category.getCategoryByIndex(Randoms.pickNumberInRange(0, 4));
+            Category newCategory = Category.getCategoryByIndex(Randoms.pickNumberInRange(1, 5));
             if (countRecommendedCategories(newCategory) < 2) {
                 categories.add(newCategory);
                 break;

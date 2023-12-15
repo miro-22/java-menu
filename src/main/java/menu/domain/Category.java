@@ -1,13 +1,12 @@
 package menu.domain;
 
 public enum Category {
-
-    KOREAN("한식", 0),
     JAPANESE("일식", 1),
-    CHINESE("중식", 2),
-    ASIAN("아시안", 3),
-    WESTERN("양식", 4),
-    NOTHING("", 5);
+    KOREAN("한식", 2),
+    CHINESE("중식", 3),
+    ASIAN("아시안", 4),
+    WESTERN("양식", 5),
+    NOTHING("", 0);
 
     private final String categoryName;
     private final int index;
