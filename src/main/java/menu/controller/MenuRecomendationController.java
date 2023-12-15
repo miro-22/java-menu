@@ -30,6 +30,7 @@ public class MenuRecomendationController {
 
 
     public void run() {
+        outputView.printStart();
         // 이름 입력받기 => List<String> 이름
         CoachNames coachNames = promptCoachNames();
         // 반복 : 입력받은 이름마다 프롬프트 생성
@@ -37,7 +38,7 @@ public class MenuRecomendationController {
         // 이름 : List<메뉴> 으로 hash map 추가
         promptDisableMenusForCoaches(coachNames.coachNames());
 
-        for (int i = 0; i < Weekday.values().length - 1; i++) {
+        for (int i = 0; i < Weekday.values().length; i++) {
             // 카테고리 추첨
             // 한 주에 같은 카테고리를 3회 이상 먹지 못 한다.
             // 추천할 수 없는 카테고리의 경우 재추첨한다.
@@ -54,18 +55,16 @@ public class MenuRecomendationController {
         }
 
         // 출력
-        for (String name : coachNames.coachNames()) {
-            System.out.println(recommendedMenus.get(name));
-        }
+        outputView.printResult();
+        outputView.printCategory(categories);
+        outputView.printMenus(coachNames.coachNames(), recommendedMenus);
     }
 
     private void recommendMenu(String name, Category category) {
         while (true) {
             String menu = Randoms.shuffle(Menu.getMenusByCategory(category)).get(0);
-            if (recommendedMenus.get(name) == null) {
-                recommendedMenus.put(name, new ArrayList<>());
-            }
-            
+            recommendedMenus.computeIfAbsent(name, k -> new ArrayList<>());
+
             if ((recommendedMenus.get(name) == null || !recommendedMenus.get(name).contains(menu))
                     && !disableMenusMap.get(name).disableMenus.contains(menu)) {
                 recommendedMenus.get(name).add(menu);

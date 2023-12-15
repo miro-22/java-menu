@@ -18,7 +18,6 @@ public class CoachNames {
 
         coachNames = new ArrayList<>();
         createNames(input);
-        System.out.println(coachNames);
     }
 
     private void createNames(String input) {

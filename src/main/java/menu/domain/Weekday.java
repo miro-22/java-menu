@@ -5,9 +5,7 @@ public enum Weekday {
     TUE("화요일", 2),
     WED("수요일", 3),
     THU("목요일", 4),
-    FRI("금요일", 5),
-    SAT("토요일", 6),
-    SUN("일요일", 7);
+    FRI("금요일", 5);
 
     private final String title;
     private final int index;
