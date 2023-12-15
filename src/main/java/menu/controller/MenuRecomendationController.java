@@ -1,10 +1,15 @@
 package menu.controller;
 
+import camp.nextstep.edu.missionutils.Randoms;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import menu.domain.Category;
 import menu.domain.CoachNames;
 import menu.domain.DisableMenus;
+import menu.domain.Weekday;
 import menu.view.InputView;
 import menu.view.OutputView;
 
@@ -13,6 +18,7 @@ public class MenuRecomendationController {
     OutputView outputView;
 
     Map<String, DisableMenus> disableMenusMap;
+    List<Category> categories = new ArrayList<>();
 
     public MenuRecomendationController(InputView inputView, OutputView outputView) {
         disableMenusMap = new HashMap<>();
@@ -32,6 +38,9 @@ public class MenuRecomendationController {
         // 카테고리 추첨
         // 한 주에 같은 카테고리를 3회 이상 먹지 못 한다.
         // 추천할 수 없는 카테고리의 경우 재추첨한다.
+        for (int i = 0; i < Weekday.values().length - 1; i++) {
+            recommendCategory();
+        }
 
         // 메뉴 추첨
         // 각 코치에게 한 주에 중복되지 않는 메뉴를 추천해야 한다.
@@ -41,14 +50,31 @@ public class MenuRecomendationController {
         // 출력
     }
 
+    public void recommendCategory() {
+        while (true) {
+            Category newCategory = Category.getCategoryByIndex(Randoms.pickNumberInRange(0, 4));
+            if (countRecommendedCategories(newCategory) < 2) {
+                categories.add(newCategory);
+                break;
+            }
+        }
+    }
+
+    public int countRecommendedCategories(Category newCategory) {
+        int count = 0;
+        for (Category category : categories) {
+            if (Objects.equals(newCategory.getCategoryName(), category.getCategoryName())) {
+                count += 1;
+            }
+        }
+        return count;
+    }
+
     public void promptDisableMenusForCoaches(List<String> coachNames) {
         for (String name : coachNames) {
             DisableMenus disableMenus = promptDisableMenusForCoach(name);
             disableMenusMap.put(name, disableMenus);
         }
-
-        System.out.println(disableMenusMap.get(coachNames.get(0)).disableMenus);
-        System.out.println(disableMenusMap.get(coachNames.get(1)).disableMenus);
     }
 
     private DisableMenus promptDisableMenusForCoach(String name) {

@@ -10,8 +10,6 @@ public class DisableMenus {
     public DisableMenus(String input) {
         validate(input);
         createDisableMenus(input);
-
-        System.out.println(disableMenus);
     }
 
     private void createDisableMenus(String input) {
