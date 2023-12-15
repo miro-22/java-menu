@@ -77,6 +77,15 @@ public enum Menu {
         return menus;
     }
 
+    public static boolean contains(String menuName) {
+        for (Menu menu : Menu.values()) {
+            if (menu.menuName.equals(menuName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public Category getCategory() {
         return category;
     }

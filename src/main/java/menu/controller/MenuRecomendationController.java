@@ -65,8 +65,8 @@ public class MenuRecomendationController {
             String menu = Randoms.shuffle(Menu.getMenusByCategory(category)).get(0);
             recommendedMenus.computeIfAbsent(name, k -> new ArrayList<>());
 
-            if ((recommendedMenus.get(name) == null || !recommendedMenus.get(name).contains(menu))
-                    && !disableMenusMap.get(name).disableMenus.contains(menu)) {
+            if (!recommendedMenus.get(name).contains(menu)
+                    && !disableMenusMap.get(name).contains(menu)) {
                 recommendedMenus.get(name).add(menu);
                 break;
             }
