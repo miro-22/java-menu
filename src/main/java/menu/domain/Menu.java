@@ -1,5 +1,8 @@
 package menu.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public enum Menu {
     // 일식
     GYUDON(Category.JAPANESE, "규동"),
@@ -64,11 +67,17 @@ public enum Menu {
         this.menuName = menuName;
     }
 
-    public Category getCategory() {
-        return category;
+    public static List<String> getMenusByCategory(Category targetCategory) {
+        List<String> menus = new ArrayList<>();
+        for (Menu menu : Menu.values()) {
+            if (menu.getCategory() == targetCategory) {
+                menus.add(menu.menuName);
+            }
+        }
+        return menus;
     }
 
-    public String getMenuName() {
-        return menuName;
+    public Category getCategory() {
+        return category;
     }
 }

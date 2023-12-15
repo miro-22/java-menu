@@ -9,6 +9,7 @@ import java.util.Objects;
 import menu.domain.Category;
 import menu.domain.CoachNames;
 import menu.domain.DisableMenus;
+import menu.domain.Menu;
 import menu.domain.Weekday;
 import menu.view.InputView;
 import menu.view.OutputView;
@@ -19,6 +20,7 @@ public class MenuRecomendationController {
 
     Map<String, DisableMenus> disableMenusMap;
     List<Category> categories = new ArrayList<>();
+    HashMap<String, List<String>> recommendedMenus = new HashMap<>();
 
     public MenuRecomendationController(InputView inputView, OutputView outputView) {
         disableMenusMap = new HashMap<>();
@@ -35,19 +37,41 @@ public class MenuRecomendationController {
         // 이름 : List<메뉴> 으로 hash map 추가
         promptDisableMenusForCoaches(coachNames.coachNames());
 
-        // 카테고리 추첨
-        // 한 주에 같은 카테고리를 3회 이상 먹지 못 한다.
-        // 추천할 수 없는 카테고리의 경우 재추첨한다.
         for (int i = 0; i < Weekday.values().length - 1; i++) {
+            // 카테고리 추첨
+            // 한 주에 같은 카테고리를 3회 이상 먹지 못 한다.
+            // 추천할 수 없는 카테고리의 경우 재추첨한다.
             recommendCategory();
+
+            // 메뉴 추첨
+            // 각 코치에게 한 주에 중복되지 않는 메뉴를 추천해야 한다.
+            // 각 코치가 고른 못 먹는 메뉴를 고려해야 한다.
+            // 추천할 수 없는 메뉴의 경우 재추첨한다.
+            for (String name : coachNames.coachNames()) {
+                recommendMenu(name, categories.get(i));
+            }
+
         }
 
-        // 메뉴 추첨
-        // 각 코치에게 한 주에 중복되지 않는 메뉴를 추천해야 한다.
-        // 각 코치가 고른 못 먹는 메뉴를 고려해야 한다.
-        // 추천할 수 없는 메뉴의 경우 재추첨한다.
-
         // 출력
+        for (String name : coachNames.coachNames()) {
+            System.out.println(recommendedMenus.get(name));
+        }
+    }
+
+    private void recommendMenu(String name, Category category) {
+        while (true) {
+            String menu = Randoms.shuffle(Menu.getMenusByCategory(category)).get(0);
+            if (recommendedMenus.get(name) == null) {
+                recommendedMenus.put(name, new ArrayList<>());
+            }
+            
+            if ((recommendedMenus.get(name) == null || !recommendedMenus.get(name).contains(menu))
+                    && !disableMenusMap.get(name).disableMenus.contains(menu)) {
+                recommendedMenus.get(name).add(menu);
+                break;
+            }
+        }
     }
 
     public void recommendCategory() {
