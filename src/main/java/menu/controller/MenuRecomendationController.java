@@ -4,28 +4,27 @@ import camp.nextstep.edu.missionutils.Randoms;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import menu.domain.Category;
 import menu.domain.CoachNames;
-import menu.domain.DisableMenus;
 import menu.domain.Menu;
 import menu.domain.Weekday;
 import menu.view.InputView;
 import menu.view.OutputView;
 
 public class MenuRecomendationController {
-    InputView inputView;
-    OutputView outputView;
+    private final InputView inputView;
+    private final OutputView outputView;
 
-    private Map<String, DisableMenus> disableMenusMap;
+    private final DisableMenusController disableMenusController;
+
     private List<Category> categories = new ArrayList<>();
     private HashMap<String, List<String>> recommendedMenus = new HashMap<>();
 
     public MenuRecomendationController(InputView inputView, OutputView outputView) {
-        disableMenusMap = new HashMap<>();
         this.inputView = inputView;
         this.outputView = outputView;
+        this.disableMenusController = new DisableMenusController(inputView, outputView);
     }
 
 
@@ -36,7 +35,7 @@ public class MenuRecomendationController {
         // 반복 : 입력받은 이름마다 프롬프트 생성
         // 이름을 인자로 받아 못먹는 메뉴를 받는 프롬프트
         // 이름 : List<메뉴> 으로 hash map 추가
-        promptDisableMenusForCoaches(coachNames.coachNames());
+        disableMenusController.promptDisableMenusForCoaches(coachNames.coachNames());
 
         for (int i = 0; i < Weekday.values().length; i++) {
             // 카테고리 추첨
@@ -66,7 +65,7 @@ public class MenuRecomendationController {
             recommendedMenus.computeIfAbsent(name, k -> new ArrayList<>());
 
             if (!recommendedMenus.get(name).contains(menu)
-                    && !disableMenusMap.get(name).contains(menu)) {
+                    && !disableMenusController.containDisableMenusByName(name, menu)) {
                 recommendedMenus.get(name).add(menu);
                 break;
             }
@@ -93,23 +92,6 @@ public class MenuRecomendationController {
         return count;
     }
 
-    public void promptDisableMenusForCoaches(List<String> coachNames) {
-        for (String name : coachNames) {
-            DisableMenus disableMenus = promptDisableMenusForCoach(name);
-            disableMenusMap.put(name, disableMenus);
-        }
-    }
-
-    private DisableMenus promptDisableMenusForCoach(String name) {
-        while (true) {
-            try {
-                String input = inputView.readDisableMenus(name);
-                return new DisableMenus(input);
-            } catch (IllegalArgumentException e) {
-                outputView.printError(e);
-            }
-        }
-    }
 
     public CoachNames promptCoachNames() {
         while (true) {
