@@ -20,8 +20,9 @@ public class DisableMenus {
     }
 
     private void validate(String input) {
-        isValidAmount(disableMenus);
-        isValidMenu(disableMenus);
+        List<String> names = new ArrayList<>(Arrays.asList(input.split(",")));
+        isValidAmount(names);
+        isValidMenu(names);
     }
 
     // TODO : 0개에서 2개가 아닌 검증

@@ -18,9 +18,9 @@ public class MenuRecomendationController {
     InputView inputView;
     OutputView outputView;
 
-    Map<String, DisableMenus> disableMenusMap;
-    List<Category> categories = new ArrayList<>();
-    HashMap<String, List<String>> recommendedMenus = new HashMap<>();
+    private Map<String, DisableMenus> disableMenusMap;
+    private List<Category> categories = new ArrayList<>();
+    private HashMap<String, List<String>> recommendedMenus = new HashMap<>();
 
     public MenuRecomendationController(InputView inputView, OutputView outputView) {
         disableMenusMap = new HashMap<>();
